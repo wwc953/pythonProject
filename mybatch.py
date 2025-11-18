@@ -2,11 +2,14 @@ import akshare as ak
 import pandas as pd
 import time
 from datetime import datetime
-from threading import Thread, Lock
 import concurrent.futures
+import queue, threading
 
+stock_data_task = []
 stock_data = []
-set_lock = Lock()
+# 创建一个线程安全的队列
+# stock_data = queue.Queue()
+lock = threading.Lock()
 
 
 def do_query():
@@ -18,17 +21,14 @@ def do_query():
     # count = 0
     # total = len(stock_info_a_code_name)
     # 创建线程池
-    with concurrent.futures.ThreadPoolExecutor(max_workers=12) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
         for index, row in stock_info_a_code_name.iterrows():
             # 提交任务给线程池
             future = executor.submit(query_one_detail, row['代码'])
-            # 获取任务的结果
-            result = future.result()
-            # print(result)
-            # with set_lock:
-            if result is not None:
-                # stock_data.append(result)
-                print(result)
+            stock_data_task.append(future)
+    for task in concurrent.futures.as_completed(stock_data_task):
+        print(task.result())
+
     print(f"数据收集完成！成功获取 {len(stock_data)} 只股票的数据")
     # 关闭线程池
     executor.shutdown()
@@ -78,6 +78,10 @@ def query_one_detail(symbol):
         '今年以来涨幅': data_dict['今年以来涨幅'],
         '时间': data_dict['时间']
     }
+    # stock_data.put(stock_info)
+    with lock:
+        print(threading.current_thread().name + "-" + stock_info)
+        stock_data.append(stock_info)
     return stock_info;
 
 
