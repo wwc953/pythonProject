@@ -41,7 +41,7 @@ def save_to_excel(stock_data, filename=None):
     """
     if not filename:
         today = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"batch_A股股票数据_{today}.xlsx"
+        filename = f"batch_数据_{today}.xlsx"
 
     if not stock_data:
         print("没有数据可保存")
@@ -80,7 +80,7 @@ def query_one_detail(symbol):
     }
     # stock_data.put(stock_info)
     with lock:
-        print(threading.current_thread().name + "-" + stock_info)
+        print(threading.current_thread().name)
         stock_data.append(stock_info)
     return stock_info;
 
