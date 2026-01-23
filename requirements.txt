@@ -3,4 +3,4 @@ pandas
 openpyxl
 
 numpy
-matplotlib
+matplotlib==3.9.0
