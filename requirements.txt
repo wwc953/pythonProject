@@ -1,3 +1,6 @@
 akshare
 pandas
 openpyxl
+
+numpy
+matplotlib
