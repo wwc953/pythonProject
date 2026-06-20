@@ -1,6 +1,9 @@
 akshare
 pandas
 openpyxl
-
 numpy
 matplotlib==3.9.0
+
+# A股每日数据收集相关
+apscheduler>=3.10.0
+chinese-calendar>=1.7.0
